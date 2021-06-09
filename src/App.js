@@ -5,6 +5,24 @@ import './App.css';
 function App() {
   const contentRef = useRef();
 
+  const handleMenu = (e) => {
+    const { name, value } = e.target;
+    console.log(name)
+    if( name === "b"){
+      insertStyle("bold");
+    } else if ( name === "i"){
+      insertStyle("italic");
+    } else if ( name === "u"){
+      insertStyle("underline");
+    } else if (name === "s"){
+      insertStyle("strikeThrough");
+    } else if ( name === "ol"){
+      insertStyle("insertOrderedList");
+    } else if ( name === "ul"){
+      insertStyle("insertUnorderedList");
+    } 
+  }
+
   const fileChange = (e) => {
     const { files } = e.target;
     const file = files[0];
@@ -20,6 +38,11 @@ function App() {
         }
       }
     })
+  }
+
+  const insertStyle = (style) => {
+      document.execCommand(style);
+      contentRef.current.focus({ preventScroll: true });
   }
 
   const insertImage = (result) => {
@@ -49,6 +72,14 @@ function App() {
         <p>wysiwyg text editor</p>
         <input className = "title" name = "title" type = "text" placeholder = "title" onChange = { handleChange } require/>
         <input className = "file" name = "file" type = "file" accept = "image/*" onChange = { fileChange }/>
+        <div class="menu"> 
+          <button className = "bold" name = "b" onClick = { handleMenu }> <b>B</b> </button> 
+          <button className = "italic" name = "i" onClick = { handleMenu }> <i>I</i> </button> 
+          <button className = "underline" name = "u" onClick = { handleMenu }> <u>U</u> </button> 
+          <button className = "strike" name = "s" onClick = { handleMenu }> <s>S</s> </button> 
+          <button className = "ordered-list" name = "ol" onClick = { handleMenu }> OL </button> 
+          <button className = "unordered-list" name = "ul" onClick = { handleMenu }> UL </button> 
+        </div>
         <div className = "content" name = "content" contentEditable="true" ref = { contentRef }></div>
       </div>
     </div>
