@@ -6,7 +6,7 @@ function App() {
   const contentRef = useRef();
 
   const handleMenu = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
     console.log(name)
     if( name === "b"){
       insertStyle("bold");
@@ -51,7 +51,7 @@ function App() {
   }
 
   const contentChange = (e) =>{
-    const { value, innerHTML } = e.target;
+    const { innerHTML } = e.target;
     console.log(innerHTML);
   }
 
@@ -60,6 +60,13 @@ function App() {
     if( name === "title" ){
       console.log(value);
     } 
+  }
+
+  const handleFont = (e) => {
+    const { value } = e.target;
+    contentRef.current.focus();
+    document.execCommand("fontName", false, value);
+    console.log(value)
   }
 
   useEffect(() => {
@@ -73,12 +80,29 @@ function App() {
         <input className = "title" name = "title" type = "text" placeholder = "title" onChange = { handleChange } require/>
         <input className = "file" name = "file" type = "file" accept = "image/*" onChange = { fileChange }/>
         <div class="menu"> 
-          <button className = "bold" name = "b" onClick = { handleMenu }> <b>B</b> </button> 
-          <button className = "italic" name = "i" onClick = { handleMenu }> <i>I</i> </button> 
-          <button className = "underline" name = "u" onClick = { handleMenu }> <u>U</u> </button> 
-          <button className = "strike" name = "s" onClick = { handleMenu }> <s>S</s> </button> 
-          <button className = "ordered-list" name = "ol" onClick = { handleMenu }> OL </button> 
-          <button className = "unordered-list" name = "ul" onClick = { handleMenu }> UL </button> 
+          <button className = "bold" name = "b" onClick = { handleMenu }> 
+            <b>B</b>
+          </button> 
+          <button className = "italic" name = "i" onClick = { handleMenu }>
+            <i>I</i>
+          </button> 
+          <button className = "underline" name = "u" onClick = { handleMenu }>
+            <u>U</u>
+          </button> 
+          <button className = "strike" name = "s" onClick = { handleMenu }>
+            <s>S</s>
+          </button> 
+          <button className = "ordered-list" name = "ol" onClick = { handleMenu }>
+            OL
+          </button> 
+          <button className = "unordered-list" name = "ul" onClick = { handleMenu }>
+            UL
+          </button>
+          <select onChange = { handleFont }>
+            <option value = "Arial">Arial</option>
+            <option value = "Helvetica">Helvetica</option>
+            <option value = "Courier New">Courier New</option>
+          </select>
         </div>
         <div className = "content" name = "content" contentEditable="true" ref = { contentRef }></div>
       </div>
