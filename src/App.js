@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Compressor from 'compressorjs';
 import './App.css';
 
 function App() {
@@ -7,13 +8,18 @@ function App() {
   const fileChange = (e) => {
     const { files } = e.target;
     const file = files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = (finishedEvent) => {
-      const { currentTarget : { result } } = finishedEvent;
-      console.log(result);
-      insertImage(result)
-    }
+    new Compressor(file, {
+      quality: 0.6,
+      success: (converted) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(converted);
+        reader.onloadend = (finishedEvent) => {
+          const { currentTarget : { result } } = finishedEvent;
+          console.log(result);
+          insertImage(result)
+        }
+      }
+    })
   }
 
   const insertImage = (result) => {
