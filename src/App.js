@@ -29,6 +29,7 @@ function App() {
     const { value, name } = e.target;
     contentRef.current.focus();
     console.log(name);
+    document.execCommand("fontSize", false, value);
     if ( value === "left" ) {
       insertStyle("justifyLeft");
     } else if ( value === "center") {
@@ -87,7 +88,7 @@ function App() {
   const handleFontSize = (e) => {
     const { value, name } = e.target;
     contentRef.current.focus();
-    console.log(value);
+    document.execCommand("fontSize", false, value);
   }
 
   useEffect(() => {
@@ -121,7 +122,7 @@ function App() {
           <label htmlFor = "file">image</label>
           <input className = "file" id = "file" name = "file" type = "file" accept = "image/*" onChange = { fileChange } />
           <select onChange = { handleFont }>
-            <option value = "" selected disabled hidden>choose font</option>
+            <option value = "" selected disabled hidden>font</option>
             <option value = "Arial">Arial</option>
             <option value = "Helvetica">Helvetica</option>
             <option value = "Courier New">Courier New</option>
@@ -132,14 +133,15 @@ function App() {
             <option value = "Verdana">Verdana</option>
             <option value = "Garamond">Garamond</option>
           </select>
-          <select id="font-size" onChange = { handleFontSize }> 
-            <option data-value="1">10pt</option> 
-            <option data-value="2">13pt</option> 
-            <option data-value="3">16pt</option> 
-            <option data-value="4">18pt</option> 
-            <option data-value="5">24pt</option> 
-            <option data-value="6">32pt</option> 
-            <option data-value="7">48pt</option> 
+          <select onChange = { handleFontSize }>
+          <option value = "" selected disabled hidden>font size</option>
+            <option value="1">10pt</option> 
+            <option value="2">13pt</option> 
+            <option value="3">16pt</option> 
+            <option value="4">18pt</option> 
+            <option value="5">24pt</option> 
+            <option value="6">32pt</option> 
+            <option value="7">48pt</option> 
           </select> 
           <select onChange = { handleAlign }>
             <option value = "" selected disabled hidden>text align</option>
