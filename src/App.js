@@ -7,7 +7,9 @@ function App() {
   
   const handleMenu = (e) => {
     const { value, name } = e.currentTarget;
-    console.log(name);
+    contentRef.current.focus();
+    console.log(e.currentTarget)
+    e.currentTarget.classList.toggle('selected');
     if( name === "b") {
       insertStyle("bold");
     } else if ( name === "i") {
@@ -21,12 +23,27 @@ function App() {
     } else if ( name === "ul") {
       insertStyle("insertUnorderedList");
     }
+  }
+
+  const handleAlign = (e) => {
+    const { value, name } = e.target;
     contentRef.current.focus();
+    console.log(name);
+    if ( value === "left" ) {
+      insertStyle("justifyLeft");
+    } else if ( value === "center") {
+      insertStyle("justifyCenter");
+    } else if ( value === "right") {
+      insertStyle("justifyRight");
+    } else if ( value === "full") {
+      insertStyle("justifyFull");
+    }
   }
 
   const fileChange = (e) => {
     const { files } = e.target;
     const file = files[0];
+    contentRef.current.focus();
     new Compressor(file, {
       quality: 0.6,
       success: (converted) => {
@@ -35,15 +52,15 @@ function App() {
         reader.onloadend = (finishedEvent) => {
           const { currentTarget : { result } } = finishedEvent;
           console.log(result);
-          insertImage(result)
+          insertImage(result);
         }
       }
-    })
+    });
   }
 
   const insertStyle = (style) => {
       document.execCommand(style);
-    }
+  }
 
   const insertImage = (result) => {
       document.execCommand('insertHTML', false, `<img className = "content-image" src = ${result} />`);
@@ -67,6 +84,12 @@ function App() {
     console.log(value);
   }
 
+  const handleFontSize = (e) => {
+    const { value, name } = e.target;
+    contentRef.current.focus();
+    console.log(value);
+  }
+
   useEffect(() => {
     contentRef.current.addEventListener('input', contentChange);
   })
@@ -76,7 +99,6 @@ function App() {
       <div className = "container">
         <p>wysiwyg text editor</p>
         <input className = "title" name = "title" type = "text" placeholder = "title" onChange = { handleChange } require = "true" />
-        <input className = "file" name = "file" type = "file" accept = "image/*" onChange = { fileChange }/>
         <div className = "menu"> 
           <button className = "bold" name = "b" onClick = { handleMenu }> 
             <b>B</b>
@@ -92,15 +114,39 @@ function App() {
           </button> 
           <button className = "ordered-list" name = "ol" onClick = { handleMenu }>
             OL
-          </button> 
+          </button>
           <button className = "unordered-list" name = "ul" onClick = { handleMenu }>
             UL
           </button>
+          <label htmlFor = "file">image</label>
+          <input className = "file" id = "file" name = "file" type = "file" accept = "image/*" onChange = { fileChange } />
           <select onChange = { handleFont }>
+            <option value = "" selected disabled hidden>choose font</option>
             <option value = "Arial">Arial</option>
             <option value = "Helvetica">Helvetica</option>
             <option value = "Courier New">Courier New</option>
             <option value = "sans-serif">sans-serif</option>
+            <option value = "Georgia">Georgia</option>
+            <option value = "Times">Times</option>
+            <option value = "Tahoma">Tahoma</option>
+            <option value = "Verdana">Verdana</option>
+            <option value = "Garamond">Garamond</option>
+          </select>
+          <select id="font-size" onChange = { handleFontSize }> 
+            <option data-value="1">10pt</option> 
+            <option data-value="2">13pt</option> 
+            <option data-value="3">16pt</option> 
+            <option data-value="4">18pt</option> 
+            <option data-value="5">24pt</option> 
+            <option data-value="6">32pt</option> 
+            <option data-value="7">48pt</option> 
+          </select> 
+          <select onChange = { handleAlign }>
+            <option value = "" selected disabled hidden>text align</option>
+            <option value = "left">left</option>
+            <option value = "right">right</option>
+            <option value = "center">center</option>
+            <option value = "full">full</option>
           </select>
         </div>
         <div className = "content" name = "content" contentEditable="true" ref = { contentRef }></div>
