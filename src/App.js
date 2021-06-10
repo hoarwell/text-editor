@@ -4,23 +4,24 @@ import './App.css';
 
 function App() {
   const contentRef = useRef();
-
+  
   const handleMenu = (e) => {
-    const { name } = e.target;
-    console.log(name)
-    if( name === "b"){
+    const { value, name } = e.currentTarget;
+    console.log(name);
+    if( name === "b") {
       insertStyle("bold");
-    } else if ( name === "i"){
+    } else if ( name === "i") {
       insertStyle("italic");
-    } else if ( name === "u"){
+    } else if ( name === "u") {
       insertStyle("underline");
-    } else if (name === "s"){
+    } else if (name === "s") {
       insertStyle("strikeThrough");
-    } else if ( name === "ol"){
+    } else if ( name === "ol") {
       insertStyle("insertOrderedList");
-    } else if ( name === "ul"){
+    } else if ( name === "ul") {
       insertStyle("insertUnorderedList");
-    } 
+    }
+    contentRef.current.focus();
   }
 
   const fileChange = (e) => {
@@ -42,11 +43,9 @@ function App() {
 
   const insertStyle = (style) => {
       document.execCommand(style);
-      contentRef.current.focus({ preventScroll: true });
-  }
+    }
 
   const insertImage = (result) => {
-      contentRef.current.focus();
       document.execCommand('insertHTML', false, `<img className = "content-image" src = ${result} />`);
   }
 
@@ -64,9 +63,8 @@ function App() {
 
   const handleFont = (e) => {
     const { value } = e.target;
-    contentRef.current.focus();
     document.execCommand("fontName", false, value);
-    console.log(value)
+    console.log(value);
   }
 
   useEffect(() => {
@@ -77,9 +75,9 @@ function App() {
     <div className="App">
       <div className = "container">
         <p>wysiwyg text editor</p>
-        <input className = "title" name = "title" type = "text" placeholder = "title" onChange = { handleChange } require/>
+        <input className = "title" name = "title" type = "text" placeholder = "title" onChange = { handleChange } require = "true" />
         <input className = "file" name = "file" type = "file" accept = "image/*" onChange = { fileChange }/>
-        <div class="menu"> 
+        <div className = "menu"> 
           <button className = "bold" name = "b" onClick = { handleMenu }> 
             <b>B</b>
           </button> 
@@ -102,6 +100,7 @@ function App() {
             <option value = "Arial">Arial</option>
             <option value = "Helvetica">Helvetica</option>
             <option value = "Courier New">Courier New</option>
+            <option value = "sans-serif">sans-serif</option>
           </select>
         </div>
         <div className = "content" name = "content" contentEditable="true" ref = { contentRef }></div>
