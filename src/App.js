@@ -4,7 +4,36 @@ import './App.css';
 
 function App() {
   const contentRef = useRef();
-  
+
+  // Callback function to execute when mutations are observed
+  const callback = function(mutationsList, observer) {
+      for(const mutation of mutationsList) {
+        if (mutation.type === 'childList' && mutation.removedNodes[0]) {
+          console.log(mutation.target.ownerDocument.images)
+          let imagesArray = [...mutation.target.ownerDocument.images];
+          let sorted = [...new Set(imagesArray)];
+          console.log(sorted)
+
+          for(let i = 0; i < imagesArray.length; i++ ){
+            if(imagesArray[i].currentSrc === mutation.removedNodes[0].src){
+              console.log('중복 있습니다.', i) // 중복이 있으면 storage 저장 할 필요 없음
+            } else {
+              console.log('중복 없습니다.') // 중복이 없으면 add database
+            }
+          }
+        }
+      }
+  };
+
+  // check if imagesArray has mutation.removedNodes[0].src alraedy and if it has make it one
+
+  useEffect(() => {
+      // Create an observer instance linked to the callback function
+      const observer = new MutationObserver(callback);
+      observer.observe(contentRef.current, { attributes: true, childList: true, subtree: true });
+      return () => observer.disconnect();
+  })
+
   const handleMenu = (e) => {
     const { value, name } = e.currentTarget;
     contentRef.current.focus();
@@ -52,7 +81,6 @@ function App() {
         reader.readAsDataURL(converted);
         reader.onloadend = (finishedEvent) => {
           const { currentTarget : { result } } = finishedEvent;
-          console.log(result);
           insertImage(result);
         }
       }
@@ -64,12 +92,11 @@ function App() {
   }
 
   const insertImage = (result) => {
-      document.execCommand('insertHTML', false, `<img className = "content-image" src = ${result} />`);
+      document.execCommand('insertHTML', false, `<img className = "content-image" id = "imgid.." src = ${result} />`);
   }
 
   const contentChange = (e) =>{
     const { innerHTML } = e.target;
-    console.log(innerHTML);
   }
 
   const handleChange = (e) => {
